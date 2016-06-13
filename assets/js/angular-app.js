@@ -1,4 +1,3 @@
-console.log(process);
 (function() {
     const exec = require('child_process').exec;
     //const spawn = require('child_process').spawn;
@@ -7,7 +6,7 @@ console.log(process);
 
         $scope.projects = [
             {
-                title: 'Food Risk Management',
+                title: 'Demo project name',
                 commands: [
                     {
                         title: 'Command name here',
