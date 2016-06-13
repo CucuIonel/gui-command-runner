@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html ng-app="electron-app">
+<head>
+    <title>GUI Command Runner</title>
+    <link rel="stylesheet" type="text/css" href="./assets/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="./assets/css/app-style.css">
+</head>
+<body>
+<div class="app-container" ng-controller="MainController">
+
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+        Launch demo modal
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Add new command</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Task title</label>
+                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Command</label>
+                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Arguments</label>
+                            <input type="password" class="form-control" id="exampleInputPassword1"
+                                   placeholder="Password">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" ng-repeat="project in projects track by $index">
+        <div class="col-sm-12">
+            <h3>{{ project.title}}</h3>
+
+            <div class="row" ng-repeat="command in project.commands track by $index">
+                <div class="col-sm-4">
+                    <h4>{{ command.title }}</h4>
+                </div>
+                <div class="col-sm-5">
+                    <span>Status: </span><span ng-if="command.isRunning">Running</span><span ng-if="!command.isRunning">Not Running</span>
+                    <button class="btn btn-link"
+                            type="button"
+                            data-toggle="collapse"
+                            data-target="#{{'toggleConsole-'+$index}}"
+                            aria-expanded="false"
+                            aria-controls="{{'toggleConsole-'+$index}}"
+                            ng-click="command.isConsoleExpanded = !command.isConsoleExpanded;">
+                        <span ng-show="!command.isConsoleExpanded">Show console</span>
+                        <span ng-show="command.isConsoleExpanded">Hide console</span>
+                    </button>
+                </div>
+                <div class="col-sm-3">
+                    <span>Action: </span>
+                    <button ng-if="!command.isRunning" class="btn btn-success" ng-click="startProcess(command)">
+                        <span class="glyphicon glyphicon-play"></span>
+                    </button>
+                    <button ng-if="command.isRunning" class="btn btn-danger" ng-click="stopProcess(command)">
+                        <span class="glyphicon glyphicon-stop"></span>
+                    </button>
+                </div>
+                <div class="col-sm-12">
+
+                    <div class="collapse" id="{{ 'toggleConsole-'+$index }}">
+                        <div class="well">
+                            <div class="text-right">
+                                <button class="btn btn-primary btn-xs" ng-click="command.consoleOutput = ''">Clear
+                                    Console Output
+                                </button>
+                            </div>
+                            <textarea class="form-control process-console" ng-model="command.consoleOutput"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>window.$ = window.jQuery = require('./assets/js/jquery-2.2.0.js');</script>
+
+<script type="text/javascript" src="./assets/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="./assets/js/angular.min.js"></script>
+<script type="text/javascript">
+    require('./assets/js/angular-app.js');
+</script>
+</body>
+</html>
