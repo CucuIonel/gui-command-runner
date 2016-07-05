@@ -4,6 +4,7 @@
     angular.module('electron-app', [])
     .controller('MainController', ['$scope', function($scope) {
 
+        $scope.updateConsoleScroll = 0;
         $scope.projects = [
             {
                 title: 'Demo project name',
@@ -33,18 +34,21 @@
             spawnedProcess.stdout.on('data', (data) => {
                 $scope.$apply(function () {
                     processObject.consoleOutput += ('stdout: ' + data);
+                    $scope.updateConsoleScroll++;
                 });
             });
 
             spawnedProcess.stderr.on('data', (data) => {
                 $scope.$apply(function () {
                     processObject.consoleOutput += ('stderr: ' + data);
+                    $scope.updateConsoleScroll++;
                 });
             });
 
             spawnedProcess.on('close', (code) => {
                 $scope.$apply(function () {
-                    processObject.consoleOutput += ('close: ' + code);
+                    processObject.consoleOutput += ('\nclose: ' + code);
+                    $scope.updateConsoleScroll++;
                     processObject.isRunning = false;
                     processObject.spawnedProcess = null;
                 });
@@ -55,6 +59,6 @@
             if(angular.isDefined(processObject.spawnedProcess)){
                 processObject.spawnedProcess.kill();
             }
-        }
+        };
     }]);
 })();

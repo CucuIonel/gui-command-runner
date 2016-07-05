@@ -8,13 +8,15 @@
 <body>
 <div class="app-container" ng-controller="MainController">
 
-    <!-- Button trigger modal -->
-    <!--<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-        Launch demo modal
-    </button>-->
+    <div>
+        <button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#settings-modal">
+            <span class="glyphicon glyphicon-cog"></span>
+        </button>
+    </div>
+
 
     <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal fade" id="settings-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -25,17 +27,16 @@
                 <div class="modal-body">
                     <form>
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Task title</label>
-                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+                            <label for="command-title">Task title</label>
+                            <input type="text" class="form-control" id="command-title">
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Command</label>
-                            <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+                            <label for="command-name">Command</label>
+                            <input type="text" class="form-control" id="command-name">
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputPassword1">Arguments</label>
-                            <input type="password" class="form-control" id="exampleInputPassword1"
-                                   placeholder="Password">
+                            <label for="command-arguments">Arguments</label>
+                            <input type="text" class="form-control" id="command-arguments">
                         </div>
                     </form>
                 </div>
@@ -49,14 +50,14 @@
 
     <div class="row" ng-repeat="project in projects track by $index">
         <div class="col-sm-12">
-            <h3>{{ project.title}}</h3>
-
-            <div class="row" ng-repeat="command in project.commands track by $index">
+            <h4>{{ project.title}}</h4>
+            <div class="row command-row clearfix" ng-repeat="command in project.commands track by $index">
                 <div class="col-sm-4">
-                    <h4>{{ command.title }}</h4>
+                    <h5>{{ command.title }}</h5>
                 </div>
                 <div class="col-sm-5">
-                    <span>Status: </span><span ng-if="command.isRunning">Running</span><span ng-if="!command.isRunning">Not Running</span>
+                    <span>Status: </span>
+                    <span class="process-status" ng-class="{'running': command.isRunning, 'stopped': !command.isRunning}"></span>
                     <button class="btn btn-link"
                             type="button"
                             data-toggle="collapse"
@@ -70,15 +71,12 @@
                 </div>
                 <div class="col-sm-3">
                     <span>Action: </span>
-                    <button ng-if="!command.isRunning" class="btn btn-success" ng-click="startProcess(command)">
-                        <span class="glyphicon glyphicon-play"></span>
-                    </button>
-                    <button ng-if="command.isRunning" class="btn btn-danger" ng-click="stopProcess(command)">
-                        <span class="glyphicon glyphicon-stop"></span>
-                    </button>
+                    <div class="action-button-wrapper">
+                        <span class="glyphicon glyphicon-play" ng-show="!command.isRunning" ng-click="startProcess(command)"></span>
+                        <span class="glyphicon glyphicon-stop" ng-show="command.isRunning" ng-click="stopProcess(command)"></span>
+                    </div>
                 </div>
-                <div class="col-sm-12">
-
+                <div class="col-sm-12 console-container">
                     <div class="collapse" id="{{ 'toggleConsole-'+$index }}">
                         <div class="well">
                             <div class="text-right">
@@ -86,7 +84,7 @@
                                     Console Output
                                 </button>
                             </div>
-                            <textarea class="form-control process-console" ng-model="command.consoleOutput"></textarea>
+                            <textarea class="process-console" ng-model="command.consoleOutput" readonly console=""></textarea>
                         </div>
                     </div>
                 </div>
@@ -103,5 +101,6 @@
 <script type="text/javascript">
     require('./assets/js/angular-app.js');
 </script>
+<script type="text/javascript" src="./assets/js/directives/consoleDirective.js"></script>
 </body>
 </html>
