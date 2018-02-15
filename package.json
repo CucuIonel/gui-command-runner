@@ -12,5 +12,12 @@
   "devDependencies": {
     "electron-packager": "^5.2.1",
     "electron-prebuilt": "^0.36.2"
+  },
+  "dependencies": {
+    "angular": "^1.6.9",
+    "angular-animate": "^1.6.9",
+    "angular-aria": "^1.6.9",
+    "angular-material": "^1.1.7",
+    "angular-messages": "^1.6.9"
   }
 }

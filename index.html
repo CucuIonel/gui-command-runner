@@ -2,105 +2,118 @@
 <html ng-app="electron-app">
 <head>
     <title>GUI Command Runner</title>
-    <link rel="stylesheet" type="text/css" href="./assets/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" type="text/css" href="./assets/css/bootstrap.min.css">-->
     <link rel="stylesheet" type="text/css" href="./assets/css/app-style.css">
+    <link rel="stylesheet" type="text/css" href="./node_modules/angular-material/angular-material.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-<div class="app-container" ng-controller="MainController">
+<div layout="column" layout-fill ng-cloak="" ng-controller="MainController">
 
-    <div>
-        <button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#settings-modal">
-            <span class="glyphicon glyphicon-cog"></span>
-        </button>
-    </div>
+    <md-toolbar class="md-whiteframe-2dp">
+
+        <div class="md-toolbar-tools">
+            <h2 md-truncate flex>GUI Command Runner</h2>
+        </div>
+
+    </md-toolbar>
+
+    <!--<div>-->
+    <!--<button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#settings-modal">-->
+    <!--<span class="glyphicon glyphicon-cog"></span>-->
+    <!--</button>-->
+    <!--</div>-->
 
 
     <!-- Modal -->
-    <div class="modal fade" id="settings-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Add new command</h4>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            <label for="command-title">Task title</label>
-                            <input type="text" class="form-control" id="command-title">
-                        </div>
-                        <div class="form-group">
-                            <label for="command-name">Command</label>
-                            <input type="text" class="form-control" id="command-name">
-                        </div>
-                        <div class="form-group">
-                            <label for="command-arguments">Arguments</label>
-                            <input type="text" class="form-control" id="command-arguments">
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!--<div ng-include="'./assets/templates/modalTemplate.html'"></div>-->
+    <md-card md-theme="'default'" md-theme-watch ng-repeat="project in projects track by $index">
+        <md-card-title>
+            <md-card-title-text>
+                <span class="md-headline">{{ project.title }}</span>
+            </md-card-title-text>
+        </md-card-title>
 
-    <div class="row" ng-repeat="project in projects track by $index">
-        <div class="col-sm-12">
-            <h4>{{ project.title}}</h4>
-            <div class="row command-row clearfix" ng-repeat="command in project.commands track by $index">
-                <div class="col-sm-4">
-                    <h5>{{ command.title }}</h5>
-                </div>
-                <div class="col-sm-5">
-                    <span>Status: </span>
-                    <span class="process-status" ng-class="{'running': command.isRunning, 'stopped': !command.isRunning}"></span>
-                    <button class="btn btn-link"
-                            type="button"
-                            data-toggle="collapse"
-                            data-target="#{{'toggleConsole-'+$index}}"
-                            aria-expanded="false"
-                            aria-controls="{{'toggleConsole-'+$index}}"
-                            ng-click="command.isConsoleExpanded = !command.isConsoleExpanded;">
-                        <span ng-show="!command.isConsoleExpanded">Show console</span>
-                        <span ng-show="command.isConsoleExpanded">Hide console</span>
-                    </button>
-                </div>
-                <div class="col-sm-3">
-                    <span>Action: </span>
-                    <div class="action-button-wrapper">
-                        <span class="glyphicon glyphicon-play" ng-show="!command.isRunning" ng-click="startProcess(command)"></span>
-                        <span class="glyphicon glyphicon-stop" ng-show="command.isRunning" ng-click="stopProcess(command)"></span>
+            <md-list>
+                <md-list-item class="md-3-line" ng-repeat="command in project.commands track by $index">
+                    <div class="md-list-item-text">
+                        <h3>{{ command.title }}</h3>
+                        <h4>{{ item.who }}</h4>
+                        <p>Status: <md-icon ng-bind="'brightness_1'" class="md-18" ng-class="{'green300': command.isRunning, 'red500': !command.isRunning}"></md-icon>
                     </div>
-                </div>
-                <div class="col-sm-12 console-container">
-                    <div class="collapse" id="{{ 'toggleConsole-'+$index }}">
-                        <div class="well">
-                            <div class="text-right">
-                                <button class="btn btn-primary btn-xs" ng-click="command.consoleOutput = ''">Clear
-                                    Console Output
-                                </button>
-                            </div>
-                            <textarea class="process-console" ng-model="command.consoleOutput" readonly console=""></textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                    <md-button class="md-secondary">
+                        <span ng-show="!command.isRunning"
+                              ng-click="startProcess(command)">Run <md-icon ng-bind="'play_arrow'" class="green300"></md-icon></span>
+                        <span ng-show="command.isRunning"
+                              ng-click="stopProcess(command)">Stop <md-icon ng-bind="'stop'" class="red500"></md-icon></span>
+                    </md-button>
+                    <md-divider ng-if="!$last"></md-divider>
+                </md-list-item>
+            </md-list>
+    </md-card>
+
+    <!--<div class="row" ng-repeat="project in projects track by $index">-->
+        <!--<div class="col-sm-12">-->
+            <!--<h4>{{ project.title}}</h4>-->
+            <!--<div class="row command-row clearfix" ng-repeat="command in project.commands track by $index">-->
+                <!--<div class="col-sm-4">-->
+                    <!--<h5>{{ command.title }}</h5>-->
+                <!--</div>-->
+                <!--<div class="col-sm-5">-->
+                    <!--<span>Status: </span>-->
+                    <!--<span class="process-status"-->
+                          <!--ng-class="{'running': command.isRunning, 'stopped': !command.isRunning}"></span>-->
+                    <!--<button class="btn btn-link"-->
+                            <!--type="button"-->
+                            <!--data-toggle="collapse"-->
+                            <!--data-target="#{{'toggleConsole-'+$index}}"-->
+                            <!--aria-expanded="false"-->
+                            <!--aria-controls="{{'toggleConsole-'+$index}}"-->
+                            <!--ng-click="command.isConsoleExpanded = !command.isConsoleExpanded;">-->
+                        <!--<span ng-show="!command.isConsoleExpanded">Show console</span>-->
+                        <!--<span ng-show="command.isConsoleExpanded">Hide console</span>-->
+                    <!--</button>-->
+                <!--</div>-->
+                <!--<div class="col-sm-3">-->
+                    <!--<span>Action: </span>-->
+                    <!--<div class="action-button-wrapper">-->
+                        <!--<span class="glyphicon glyphicon-play" ng-show="!command.isRunning"-->
+                              <!--ng-click="startProcess(command)"></span>-->
+                        <!--<span class="glyphicon glyphicon-stop" ng-show="command.isRunning"-->
+                              <!--ng-click="stopProcess(command)"></span>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="col-sm-12 console-container">-->
+                    <!--<div class="collapse" id="{{ 'toggleConsole-'+$index }}">-->
+                        <!--<div class="well">-->
+                            <!--<div class="text-right">-->
+                                <!--<button class="btn btn-primary btn-xs" ng-click="command.consoleOutput = ''">Clear-->
+                                    <!--Console Output-->
+                                <!--</button>-->
+                            <!--</div>-->
+                            <!--<textarea class="process-console" ng-model="command.consoleOutput" readonly-->
+                                      <!--console=""></textarea>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
 
 </div>
 
 <script>window.$ = window.jQuery = require('./assets/js/jquery-2.2.0.js');</script>
 
 <script type="text/javascript" src="./assets/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="./assets/js/angular.min.js"></script>
-<script type="text/javascript">
-    require('./assets/js/angular-app.js');
-</script>
+<!--<script type="text/javascript" src="./assets/js/angular.min.js"></script>-->
+
+<script src="./node_modules/angular/angular.js"></script>
+<script src="./node_modules/angular-aria/angular-aria.js"></script>
+<script src="./node_modules/angular-animate/angular-animate.js"></script>
+<script src="./node_modules/angular-messages/angular-messages.js"></script>
+<script src="./node_modules/angular-material/angular-material.js"></script>
+
+<script type="text/javascript" src="./assets/js/angular-app.js"></script>
 <script type="text/javascript" src="./assets/js/directives/consoleDirective.js"></script>
 </body>
 </html>

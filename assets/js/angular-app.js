@@ -1,7 +1,7 @@
 (function() {
     const exec = require('child_process').exec;
     //const spawn = require('child_process').spawn;
-    angular.module('electron-app', [])
+    angular.module('electron-app', ['ngMaterial', 'ngMessages'])
     .controller('MainController', ['$scope', function($scope) {
 
         $scope.updateConsoleScroll = 0;
@@ -25,7 +25,7 @@
         ];
 
         $scope.startProcess = function(processObject){
-            var spawnedProcess = exec(processObject.fullCommand, {cwd: processObject.path, env: process.env});
+            const spawnedProcess = exec(processObject.fullCommand, {cwd: processObject.path, env: process.env});
             //var spawnedProcess = spawn(processObject.command, processObject.arguments, {cwd: processObject.path, env: process.env});
 
             processObject.isRunning = true;

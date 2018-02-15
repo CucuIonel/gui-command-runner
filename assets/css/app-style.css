@@ -79,3 +79,13 @@ button, .btn, .btn:hover, .btn:active, .btn:focus {
     color: #FF7171;
     cursor: pointer;
 }
+
+/* After Material Migration */
+
+.material-icons.green300 {
+    color: #42bd41;
+}
+
+.material-icons.red500{
+    color: #F44336;
+}
